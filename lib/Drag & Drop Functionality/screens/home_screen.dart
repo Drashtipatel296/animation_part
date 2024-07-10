@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/data_list.dart';
 import '../provider/game_provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -9,89 +8,131 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gameProvider = Provider.of<GameProvider>(context);
+
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        elevation: 5,
+        shadowColor: Colors.white,
         title: const Text(
           'Matching game',
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 40,right: 30,top: 65),
-        child: Consumer<GameProvider>(
-          builder: (context, gameProvider, child) {
-           return Column(
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Score : 5',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              Row(
-                children: [
-                  Column(
+        padding: const EdgeInsets.only(left: 40, right: 30, top: 65),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Score : ${gameProvider.getScore}',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            gameProvider.isGameOver
+                ? Center(
+                    child: Text(
+                      'Game Over',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Colors.red),
+                    ),
+                  )
+                : Row(
                     children: [
-                      ...List.generate(
-                        gameProvider.data.length,
-                        (index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Draggable<Map<String, String>>(
-                            data: data[index],
-                            feedback: firstContainer(data[index]['img']),
-                            child: firstContainer(data[index]['img']),
+                      Column(
+                        children: [
+                          ...List.generate(
+                            gameProvider.l1.length,
+                            (index) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              child: Draggable<String>(
+                                childWhenDragging:
+                                    Container(
+                                      height: 50,
+                                      width: 50,
+                                      color: Colors.grey,
+                                    ),
+                                data: gameProvider.l1[index],
+                                feedback:
+                                    firstContainer(gameProvider.l1[index]),
+                                child: firstContainer(gameProvider.l1[index]),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        children: [
+                          ...List.generate(
+                            gameProvider.l2.length,
+                            (index) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              child: DragTarget<String>(
+                                onLeave: (data) {
+                                  gameProvider.accept = false;
+                                },
+                                onWillAcceptWithDetails: (data) => true,
+                                onAcceptWithDetails: (details) {
+                                  bool matched = gameProvider.matching(
+                                      index, details.data);
+                                  if (!matched) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: Text('Incorrect Match'),
+                                        content: Text('Try again!'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                },
+                                builder:
+                                    (context, candidateData, rejectedData) =>
+                                        textContainer(
+                                            gameProvider.l2[index],
+                                            gameProvider.matched[index] == true,
+                                            gameProvider.accept),
+                              ),
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                  const Spacer(),
-                  Column(
-                    children: [
-                      ...List.generate(
-                        gameProvider.data2,
-                        (index) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: DragTarget(
-                            onAcceptWithDetails: (details) {
-
-                            },
-                            builder: (context, candidateData, rejectedData) =>
-                                textContainer(data[index]['name']),
-                          ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Container textContainer(String name) {
+  Container textContainer(String name, bool matched, bool accept) {
     return Container(
       height: 60,
-      width: 120,
-      color: color,
+      width: 130,
+      decoration: BoxDecoration(
+        color: Colors.teal.shade300,
+        borderRadius: BorderRadius.circular(8),
+      ),
       alignment: Alignment.center,
       child: Text(
         name,
-        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        style:
+            const TextStyle(fontSize: 18,color: Colors.black, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -109,5 +150,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-Color color = Colors.purpleAccent;

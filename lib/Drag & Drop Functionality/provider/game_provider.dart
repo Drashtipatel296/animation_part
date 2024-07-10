@@ -1,48 +1,57 @@
 import 'package:flutter/material.dart';
 
 class GameProvider extends ChangeNotifier {
-  late List<Map<String, dynamic>> data;
-  late List<Map<String, dynamic>> data2;
-  late bool gameOver;
+  List<String> l1 = [
+    'assets/img/fb.bg.png',
+    'assets/img/google.png',
+    'assets/img/insta.png',
+    'assets/img/tw.png',
+    'assets/img/wp.png',
+    'assets/img/yt.png',
+    'assets/img/tg.png',
+  ];
+  List<String> l2 = [
+    'Facebook',
+    'Google',
+    'Instagram',
+    'Twitter',
+    'WhatsApp',
+    'YouTube',
+    'Telegram',
+  ];
 
-  GameProvider(){
-    remove();
-  }
+  bool accept = false;
+  int score = 0;
+  bool gameOver = false;
 
-  void remove(){
-    gameOver = false;
-    data = [
-      {'img': 'assets/img/fb.bg.png', 'name': 'Instagram','value' : 'Instagram',"accepting": false},
-      {'img': 'assets/img/google.png', 'name': 'Telegram','value' : 'Telegram',"accepting": false},
-      {'img': 'assets/img/insta.png', 'name': 'YouTube','value' : 'YouTube',"accepting": false},
-      {'img': 'assets/img/tw.png', 'name': 'Google','value' : 'Google',"accepting": false},
-      {'img': 'assets/img/wp.png', 'name': 'Facebook','value' : 'Facebook',"accepting": false},
-      {'img': 'assets/img/yt.png', 'name': 'Twitter','value' : 'Twitter',"accepting": false},
-      {'img': 'assets/img/tg.png', 'name': 'WhatsApp','value' : 'WhatsApp',"accepting": false},
-    ];
-    data2 = List<Map<String, dynamic>>.from(data);
-    data.shuffle();
-    data2.shuffle();
-    notifyListeners();
-  }
+  final Map<int, bool> matched = {};
 
-  void onAccept(Map<String, dynamic> item, Map<String, dynamic> receivedItem) {
-    if (item["value"] == receivedItem["value"]) {
-      data.remove(receivedItem);
-      data2.remove(item);
+  Map<int, bool> get getMatched => matched;
+
+  int get getScore => score;
+
+  bool get isGameOver => gameOver;
+
+  bool matching(int index, String data) {
+    if (l1[index] == data) {
+      matched[index] = true;
+      l1.removeAt(index);
+      l2.removeAt(index);
+      score += 10;
+      checkGameOver();
+      notifyListeners();
+      return true;
     } else {
-
+      score -= 5;
+      notifyListeners();
+      return false;
     }
-    notifyListeners();
   }
 
-  void onWillAccept(Map<String, dynamic> item, bool accepting) {
-    item["accepting"] = accepting;
-    notifyListeners();
+  void checkGameOver() {
+    if (l1.isEmpty || l2.isEmpty) {
+      gameOver = true;
+      notifyListeners();
+    }
   }
-
-  void newGame() {
-    remove();
-  }
-
 }
