@@ -110,7 +110,43 @@ You can customize the appearance and behavior of the draggable and drag target w
 https://github.com/Drashtipatel296/animation_part/assets/143180636/83f8ba16-306a-4736-aff8-2afb5418350a
 
 
+# Hero Widget in Flutter
 
+The `Hero` widget in Flutter is used to create a smooth, animated transition between two routes (pages). It is particularly useful for creating a seamless user experience when navigating between different parts of your app.
+
+## Code Sample
+
+```dart
+child: Hero(
+                tag: 'box',
+                child: Container(
+                  height: 350,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black45,
+                          offset: Offset(0, 12),
+                          blurRadius: 15,
+                        )
+                      ]),
+
+```
+<div align="center">
+<img src="https://github.com/Drashtipatel296/animation_part/assets/143180636/d4fc4881-f94f-4f58-9393-ce30cff3216e" height="500px" hspace=20></img>
+<img src="https://github.com/Drashtipatel296/animation_part/assets/143180636/d37ffacd-575f-4771-bccc-007785988aa9" height="500px" hspace=20></img>
+  <video src="">
+</div>
+
+https://github.com/Drashtipatel296/animation_part/assets/143180636/6d712557-c4e2-4129-8b59-1675dc28d894
+
+
+
+
+
+    
 
 
 
