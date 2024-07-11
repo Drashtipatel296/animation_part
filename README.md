@@ -142,7 +142,11 @@ child: Hero(
 
 https://github.com/Drashtipatel296/animation_part/assets/143180636/6d712557-c4e2-4129-8b59-1675dc28d894
 
+# Animation Widgets
 
+### Video
+
+https://github.com/Drashtipatel296/animation_part/assets/143180636/8c8d6dc2-459a-4a29-9934-9b7c4b4712e8
 
 
 
