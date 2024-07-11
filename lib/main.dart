@@ -1,3 +1,4 @@
+import 'package:animation_part/Animation%20Widgets/home_screen.dart';
 import 'package:animation_part/Drag%20&%20Drop%20Functionality/provider/game_provider.dart';
 import 'package:animation_part/Drag%20&%20Drop%20Functionality/screens/home_screen.dart';
 import 'package:animation_part/Hero%20Widget/screens/detail_screen.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: Home(),
     );
   }
 }
